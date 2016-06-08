@@ -237,6 +237,14 @@ module Fog
           merge_attributes(data)
         end
 
+        def get_metadata
+          m = {}
+          (self.metadata["items"] || []).each do |z|
+            m[z["key"]] = z["value"]
+          end
+          m
+        end
+
         def save
           requires :name
           requires :machine_type
