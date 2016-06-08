@@ -17,9 +17,13 @@ module Fog
           }
 
           health_results = target_pool.instances.map do |instance|
-            body = { "instance" => instance }
-            resp = request(api_method, parameters, body_object = body)
-            [instance, resp.data[:body]["healthStatus"]]
+            begin
+              body = { 'instance' => instance }
+              resp = request(api_method, parameters, body_object=body)
+              [instance, resp.data[:body]['healthStatus']]
+            rescue
+              [instance, nil]
+            end
           end
           Hash[health_results]
         end
