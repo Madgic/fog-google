@@ -29,6 +29,7 @@ module Fog
         #   :sha1Checksum   => ,
         # }
         attribute :raw_disk, :aliases => "rawDisk"
+        attribute :source_disk, :aliases => "sourceDisk"
 
         def preferred_kernel=(_args)
           Fog::Logger.deprecation("preferred_kernel= is no longer used [light_black](#{caller.first})[/]")
@@ -64,10 +65,10 @@ module Fog
 
         def save
           requires :name
-          requires :raw_disk
 
           options = {
-            "rawDisk"         => raw_disk,
+            "rawDisk"         => raw_disk || {},
+            "sourceDisk"      => source_disk,
             "description"     => description
           }
 
