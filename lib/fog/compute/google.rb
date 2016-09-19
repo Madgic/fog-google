@@ -166,6 +166,15 @@ module Fog
       request :update_url_map
       request :validate_url_map
 
+      request :list_instance_templates
+      request :list_instance_group_managers
+      request :get_instance_template
+      request :insert_instance_template
+      request :delete_instance_template
+
+      request :list_aggregated_instance_group_managers
+      request :set_instance_template
+
       model_path "fog/compute/google/models"
       model :server
       collection :servers
@@ -241,6 +250,12 @@ module Fog
 
       model :subnetwork
       collection :subnetworks
+
+      model :instance_template
+      collection :instance_templates
+
+      model :instance_group_manager
+      collection :instance_group_managers
     end
   end
 end
