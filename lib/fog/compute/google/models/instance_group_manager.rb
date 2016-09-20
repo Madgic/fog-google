@@ -7,6 +7,7 @@ module Fog
         attribute :kind
         attribute :self_link, :aliases => "selfLink"
         attribute :zone
+        attribute :region
         attribute :instance_group, :aliases => "instanceGroup"
         attribute :instance_template, :aliases => "instanceTemplate"
 
@@ -14,9 +15,6 @@ module Fog
           service.set_instance_template self, instance_template
         end
 
-        def resource_url
-          "#{service.project}/global/instanceGroupManagers/#{name}"
-        end
       end
     end
   end

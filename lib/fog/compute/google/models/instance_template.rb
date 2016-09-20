@@ -32,9 +32,6 @@ module Fog
           operation
         end
 
-        def resource_url
-          "#{service.project}/global/instanceTemplates/#{name}"
-        end
       end
     end
   end
