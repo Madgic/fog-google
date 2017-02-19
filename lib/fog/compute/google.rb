@@ -174,6 +174,7 @@ module Fog
 
       request :list_aggregated_instance_group_managers
       request :set_instance_template
+      request :recreate_instances
 
       model_path "fog/compute/google/models"
       model :server

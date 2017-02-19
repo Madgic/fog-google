@@ -15,6 +15,10 @@ module Fog
           service.set_instance_template self, instance_template
         end
 
+        def recreate_instances instances
+          service.recreate_instances self, instances
+        end
+
       end
     end
   end
