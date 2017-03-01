@@ -19,6 +19,10 @@ module Fog
           service.recreate_instances self, instances
         end
 
+        def abandon_instances instances
+          service.abandon_instances self, instances
+        end
+
       end
     end
   end
