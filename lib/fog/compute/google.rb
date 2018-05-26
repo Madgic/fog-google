@@ -5,13 +5,6 @@ module Fog
       autoload :Real, File.expand_path("../google/real", __FILE__)
 
       requires :google_project
-<<<<<<< HEAD
-      recognizes :app_name, :app_version, :google_client_email, :google_key_location, :google_key_string,
-                 :google_client, :google_json_key_location, :google_json_key_string, :google_extra_global_projects
-
-      GOOGLE_COMPUTE_API_VERSION     = "beta"
-      GOOGLE_COMPUTE_BASE_URL        = "https://www.googleapis.com/compute/"
-=======
       recognizes(
         :app_name,
         :app_version,
@@ -28,7 +21,6 @@ module Fog
 
       GOOGLE_COMPUTE_API_VERSION     = "v1".freeze
       GOOGLE_COMPUTE_BASE_URL        = "https://www.googleapis.com/compute/".freeze
->>>>>>> v1.3.3
       GOOGLE_COMPUTE_API_SCOPE_URLS  = %w(https://www.googleapis.com/auth/compute
                                           https://www.googleapis.com/auth/devstorage.read_write
                                           https://www.googleapis.com/auth/ndev.cloudman

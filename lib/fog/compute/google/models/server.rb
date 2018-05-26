@@ -439,19 +439,6 @@ module Fog
           end
         end
 
-        def reload
-          data = service.get_server(name, zone_name).body
-          merge_attributes(data)
-        end
-
-        def get_metadata
-          m = {}
-          (self.metadata["items"] || []).each do |z|
-            m[z["key"]] = z["value"]
-          end
-          m
-        end
-
         def save(username: nil, public_key: nil)
           requires :name
           requires :machine_type

@@ -23,7 +23,6 @@ module Fog
         #   :sha1Checksum   => ,
         # }
         attribute :raw_disk, :aliases => "rawDisk"
-        attribute :source_disk, :aliases => "sourceDisk"
 
         attribute :self_link, :aliases => "selfLink"
         attribute :source_disk, :aliases => "sourceDisk"
@@ -65,12 +64,6 @@ module Fog
 
         def save
           requires :name
-
-          options = {
-            "rawDisk"         => raw_disk || {},
-            "sourceDisk"      => source_disk,
-            "description"     => description
-          }
 
           data = service.insert_image(name, attributes)
           operation = Fog::Compute::Google::Operations.new(:service => service)
