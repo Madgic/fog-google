@@ -9,18 +9,11 @@ module Fog
 
       class Real
         def recreate_instances(instance_group_manager, instances)
-          api_method = @compute.instance_group_managers.recreate_instances
-          parameters = {
-            "project" => @project,
-            "zone" => instance_group_manager.zone.split("/")[-1],
-            "instanceGroupManager" => instance_group_manager.name,
-          }
-
-          body_object = {
-            "instances" => instances.map{|x| x.self_link},
-          }
-
-          request(api_method, parameters, body_object = body_object)
+          zone = instance_group_manager.zone.split("/")[-1]
+          request = ::Google::Apis::ComputeV1::InstanceGroupManagersAbandonInstancesRequest.new(
+            :instances => instances.map{|x| x.self_link}
+          )
+          @compute.recreate_instance_group_manager_instances(@project, zone, instance_group_manager.name, request)
         end
       end
     end

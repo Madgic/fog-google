@@ -9,13 +9,7 @@ module Fog
 
       class Real
         def delete_instance_template(name)
-          api_method = @compute.instance_templates.delete
-          parameters = {
-            "instanceTemplate" => name,
-            "project" => @project,
-          }
-
-          request(api_method, parameters)
+          @compute.delete_instance_template(@project, name)
         end
       end
     end

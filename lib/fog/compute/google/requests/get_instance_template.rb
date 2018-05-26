@@ -9,13 +9,7 @@ module Fog
 
       class Real
         def get_instance_template(name)
-          api_method = @compute.instance_templates.get
-          parameters = {
-            "project" => @project,
-            "instanceTemplate" => name,
-          }
-
-          request(api_method, parameters)
+          @compute.get_instance_template(@project, name)
         end
       end
     end

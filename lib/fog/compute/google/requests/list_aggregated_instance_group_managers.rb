@@ -2,20 +2,21 @@ module Fog
   module Compute
     class Google
       class Mock
-        def list_aggregated_instance_group_managers(_options = {})
+        def list_aggregated_instance_group_managers(_opts = {})
           Fog::Mock.not_implemented
         end
       end
 
       class Real
-        def list_aggregated_instance_group_managers(options = {})
-          api_method = @compute.instance_group_managers.aggregated_list
-          parameters = {
-            "project" => @project
-          }
-          parameters["filter"] = options[:filter] if options[:filter]
-
-          request(api_method, parameters)
+        def list_aggregated_instance_group_managers(filter: nil, max_results: nil,
+                                                    order_by: nil, page_token: nil)
+          @compute.list_aggregated_instance_group_managers(
+            @project,
+            :filter => filter,
+            :max_results => max_results,
+            :order_by => order_by,
+            :page_token => page_token
+          )
         end
       end
     end

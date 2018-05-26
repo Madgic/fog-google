@@ -9,17 +9,13 @@ module Fog
 
       class Real
         def insert_instance_template(name, properties, description)
-          api_method = @compute.instance_templates.insert
-          parameters = {
-            "project" => @project
-          }
-          body_object = {
-            "name" => name,
-            "description" => description,
-            "properties" => properties,
-          }
+          instance_template = ::Google::Apis::ComputeV1::InstanceTemplate.new(
+            :description => description,
+            :name => name,
+            :properties => properties,
+          )
 
-          request(api_method, parameters, body_object)
+          @compute.insert_instance_template(@project, instance_template)
         end
       end
     end

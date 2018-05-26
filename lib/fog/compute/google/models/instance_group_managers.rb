@@ -6,15 +6,15 @@ module Fog
 
         def all(filters = {})
           if filters[:zone]
-            data = service.list_instance_group_manager(filters[:zone]).body
+            data = Array(service.list_aggregated_instance_group_managers(filters[:zone]))
           else
             data = []
-            service.list_aggregated_instance_group_managers.body["items"].each_value do |group|
-              data.concat(group["instanceGroupManagers"]) if group["instanceGroupManagers"]
+            service.list_aggregated_instance_group_managers.items.each_value do |group|
+              data.concat(group.instance_group_managers) if group.instance_group_managers
             end
           end
 
-          load(data)
+          load(data.map(&:to_h))
         end
 
       end
