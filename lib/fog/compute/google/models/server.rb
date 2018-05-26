@@ -145,7 +145,7 @@ module Fog
         attribute :tags
 
         # @return [String]
-        attribute :zone
+        attribute :zone, :aliases => :zone_name
 
         GCE_SCOPE_ALIASES = {
           "default" => %w(
@@ -198,6 +198,14 @@ module Fog
                       .get(data.name, data.zone)
           operation.wait_for { ready? } unless async
           operation
+        end
+
+        # Helper method that returns first public ip address
+        # for Fog::Compute::Server.ssh default behavior
+        #
+        # @return [String]
+        def public_ip_address
+          public_ip_addresses.first
         end
 
         def public_ip_addresses
@@ -342,15 +350,25 @@ module Fog
           reload
         end
 
+        # Set an instance metadata
+        #
+        # @param [Bool] async Perform the operation asyncronously
+        # @param [Hash] new_metadata A new metadata object
+        #   Format: {'foo' => 'bar', 'baz'=>'foo'}
+        #
+        # @returns [Fog::Compute::Google::Server] server object
         def set_metadata(new_metadata = {}, async = true)
           requires :identity, :zone
 
-          if new_metadata[:items] && new_metadata[:items].is_a?(Hash)
-            new_metadata[:items] = new_metadata[:items].map { |k, v| { :key => k, :value => v } }
+          unless new_metadata.is_a?(Hash)
+            raise Fog::Errors::Error.new("Instance metadata should be a hash")
           end
 
+          # If metadata is presented in {'foo' => 'bar', 'baz'=>'foo'}
+          new_metadata_items = new_metadata.each.map { |k, v| { :key => k.to_s, :value => v.to_s } }
+
           data = service.set_server_metadata(
-            identity, zone_name, metadata[:fingerprint], new_metadata
+            identity, zone_name, metadata[:fingerprint], new_metadata_items
           )
           operation = Fog::Compute::Google::Operations
                       .new(:service => service)
@@ -374,6 +392,12 @@ module Fog
 
         def provisioning?
           status == PROVISIONING
+        end
+
+        # Check if instance is Staging. On staging vs. provisioning difference:
+        # https://cloud.google.com/compute/docs/instances/checking-instance-status
+        def staging?
+          status == STAGING
         end
 
         def ready?
