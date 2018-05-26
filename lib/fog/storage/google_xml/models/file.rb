@@ -36,7 +36,7 @@ module Fog
         end
 
         def body
-          attributes[:body] ||= last_modified && (file = collection.get(identity)) ? file.body : ""
+          last_modified && (file = collection.get(identity)) ? attributes[:body] ||= file.body : attributes[:body] ||= ""
         end
 
         def body=(new_body)
@@ -45,25 +45,24 @@ module Fog
 
         attr_reader :directory
 
-        def copy(target_directory_key, target_file_key)
+        def copy(target_directory_key, target_file_key, options = {})
           requires :directory, :key
-          service.copy_object(directory.key, key, target_directory_key, target_file_key)
+          service.copy_object(directory.key, key, target_directory_key, target_file_key, options)
           target_directory = service.directories.new(:key => target_directory_key)
           target_directory.files.get(target_file_key)
         end
 
         def destroy
           requires :directory, :key
-          begin
-            service.delete_object(directory.key, key)
-          rescue Excon::Errors::NotFound
-          end
+          service.delete_object(directory.key, key)
           true
+        rescue Excon::Errors::NotFound
+          false
         end
 
         remove_method :metadata
         def metadata
-          attributes.reject { |key, _value| !(key.to_s =~ /^x-goog-meta-/) }
+          attributes.reject { |key, _value| key.to_s =~ /^x-goog-meta-/ }
         end
 
         remove_method :metadata=

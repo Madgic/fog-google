@@ -5,12 +5,22 @@ module Fog
       autoload :Real, File.expand_path("../google/real", __FILE__)
 
       requires :google_project
-      recognizes :app_name, :app_version, :google_client_email, :google_key_location, :google_key_string,
-                 :google_client, :google_json_key_location, :google_json_key_string
+      recognizes(
+        :app_name,
+        :app_version,
+        :google_auth,
+        :google_client,
+        :google_client_email,
+        :google_client_options,
+        :google_key_location,
+        :google_key_string,
+        :google_json_key_location,
+        :google_json_key_string
+      )
 
-      GOOGLE_DNS_API_VERSION     = "v1"
-      GOOGLE_DNS_BASE_URL        = "https://www.googleapis.com/dns/"
-      GOOGLE_DNS_API_SCOPE_URLS  = %w(https://www.googleapis.com/auth/ndev.clouddns.readwrite)
+      GOOGLE_DNS_API_VERSION     = "v1".freeze
+      GOOGLE_DNS_BASE_URL        = "https://www.googleapis.com/dns/".freeze
+      GOOGLE_DNS_API_SCOPE_URLS  = %w(https://www.googleapis.com/auth/ndev.clouddns.readwrite).freeze
 
       ##
       # MODELS

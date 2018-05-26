@@ -2,7 +2,7 @@ module Fog
   module Compute
     class Google
       class Mock
-        def get_target_pool_health(_target_pool)
+        def get_target_pool_health(_target_pool, _region, _instance)
           Fog::Mock.not_implemented
         end
       end

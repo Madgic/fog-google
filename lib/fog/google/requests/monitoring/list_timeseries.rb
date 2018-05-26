@@ -5,62 +5,47 @@ module Fog
       # List the data points of the time series that match the metric and labels values and that have data points
       # in the interval
       #
-      # https://developers.google.com/cloud-monitoring/v2beta1/timeseries
+      # @see https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list
       class Real
-        def list_timeseries(metric, youngest, options = {})
-          api_method = @monitoring.timeseries.list
-          parameters = {
-            "project" => @project,
-            "metric" => metric,
-            "youngest" => youngest
+        def list_timeseries(filter: nil, interval: nil, aggregation: nil, order_by: nil, page_size: nil, page_token: nil, view: nil)
+          if filter.nil?
+            raise ArgumentError.new("filter is required")
+          end
+
+          if interval.nil?
+            raise ArgumentError.new("interval is required")
+          end
+
+          options = {
+            :filter => filter,
+            :interval_end_time => interval[:end_time],
+            :interval_start_time => interval[:start_time],
+            :order_by => order_by,
+            :page_size => page_size,
+            :page_token => page_token,
+            :view => view
           }
+          if options.key?(:interval)
+            interval = options[:interval]
+            parameters["interval.endTime"] = interval[:end_time] if interval.key?(:end_time)
+            parameters["interval.startTime"] = interval[:start_time] if interval.key?(:start_time)
+          end
 
-          parameters["count"] = options[:count] if options.key?(:count)
-          parameters["labels"] = options[:labels] if options.key?(:labels)
-          parameters["oldest"] = options[:oldest] if options.key?(:oldest)
-          parameters["pageToken"] = options[:page_token] if options.key?(:page_token)
-          parameters["timespan"] = options[:timespan] if options.key?(:timespan)
+          unless aggregation.nil?
+            %i(alignment_period cross_series_reducer group_by_fields per_series_aligner).each do |k|
+              if aggregation.key?(k)
+                options["aggregation_#{k}".to_sym] = aggregation[k]
+              end
+            end
+          end
 
-          request(api_method, parameters)
+          @monitoring.list_project_time_series("projects/#{@project}", options)
         end
       end
 
       class Mock
-        def list_timeseries(metric, youngest, _options = {})
-          body = {
-            "kind" => 'cloudmonitoring#listTimeseriesResponse',
-            "youngest" => youngest,
-            "oldest" => youngest,
-            "timeseries" => [
-              {
-                "timeseriesDesc" => {
-                  "project" => @project,
-                  "metric" => metric,
-                  "labels" => {
-                    "cloud.googleapis.com/service" => "compute.googleapis.com",
-                    "compute.googleapis.com/resource_type" => "instance",
-                    "cloud.googleapis.com/location" => "us-central1-a",
-                    "compute.googleapis.com/resource_id" => Fog::Mock.random_numbers(20).to_s,
-                    "compute.googleapis.com/instance_name" => Fog::Mock.random_hex(40)
-                  }
-                },
-                "points" => [
-                  {
-                    "start" => "2014-07-17T20:06:58.000Z",
-                    "end" => "2014-07-17T20:07:58.000Z",
-                    "doubleValue" => 60.0
-                  },
-                  {
-                    "start" => "2014-07-17T20:05:58.000Z",
-                    "end" => "2014-07-17T20:06:58.000Z",
-                    "doubleValue" => 60.0
-                  }
-                ]
-              }
-            ]
-          }
-
-          build_excon_response(body)
+        def list_timeseries(_options = {})
+          Fog::Mock.not_implemented
         end
       end
     end

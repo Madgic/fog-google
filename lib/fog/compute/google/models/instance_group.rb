@@ -11,6 +11,7 @@ module Fog
         attribute :fingerprint
         attribute :namedPorts
         attribute :network
+        attribute :subnetwork
         attribute :self_link, :aliases => "selfLink"
         attribute :size
         attribute :zone, :aliases => :zone_name
@@ -18,7 +19,12 @@ module Fog
         def save
           requires :name, :zone
 
-          service.insert_instance_group(name, zone)
+          options = {
+            "network" => network_name,
+            "subnetwork" => subnetwork_name
+          }
+
+          service.insert_instance_group(name, zone, options)
         end
 
         def destroy(_async = true)
@@ -47,10 +53,10 @@ module Fog
           requires :identity, :zone
 
           instance_list = []
-          data = service.list_instance_group_instances(identity, zone_name).body
-          if data["items"]
-            data["items"].each do |instance|
-              instance_list << service.servers.get(instance["instance"].split("/")[-1], zone_name)
+          data = service.list_instance_group_instances(identity, zone_name)
+          if data.items
+            data.items.each do |instance|
+              instance_list << service.servers.get(instance.instance.split("/")[-1], zone_name)
             end
           end
           instance_list
@@ -58,6 +64,14 @@ module Fog
 
         def zone_name
           zone.nil? ? nil : zone.split("/")[-1]
+        end
+
+        def network_name
+          network.nil? ? nil : network.split("/")[-1]
+        end
+
+        def subnetwork_name
+          subnetwork.nil? ? nil : subnetwork.split("/")[-1]
         end
 
         private

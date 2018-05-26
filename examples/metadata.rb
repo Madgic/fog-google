@@ -15,7 +15,8 @@ def test
     :name => name,
     :size_gb => 10,
     :zone_name => "us-central1-f",
-    :source_image => "debian-7-wheezy-v20131120")
+    :source_image => "debian-8-jessie-v20161215"
+  )
 
   disk.wait_for { disk.ready? }
 
@@ -25,7 +26,8 @@ def test
     :machine_type => "n1-standard-1",
     :zone_name => "us-central1-f",
     :private_key_path => File.expand_path("~/.ssh/id_rsa"),
-    :public_key_path => File.expand_path("~/.ssh/id_rsa.pub"))
+    :public_key_path => File.expand_path("~/.ssh/id_rsa.pub")
+  )
 
   server.wait_for { ready? }
 

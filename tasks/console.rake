@@ -3,10 +3,15 @@
 
 desc "Project IRB console"
 task :console do
-  require "irb"
-  require "irb/completion"
-  require "fog/google"
-  Fog.credential = :test
+  require "bundler"
+  Bundler.require(:default, :development)
+
+  # Reload helper to avoid resetting the environment when debugging
+  def reload!
+    files = $LOADED_FEATURES.select { |feat| feat =~ /\/fog-google\// }
+    files.each { |file| load file }
+  end
+
   ARGV.clear
-  IRB.start
+  Pry.start
 end

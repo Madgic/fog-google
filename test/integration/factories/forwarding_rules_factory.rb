@@ -13,8 +13,9 @@ class ForwardingRulesFactory < CollectionFactory
   end
 
   def params
-    params = { :name => resource_name,
-               :region => TEST_REGION,
-               :target => @target_pools.create.self_link }
+    { :name => resource_name,
+      :port_range => "80-80",
+      :region => TEST_REGION,
+      :target => @target_pools.create.self_link }
   end
 end

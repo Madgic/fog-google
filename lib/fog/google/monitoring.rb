@@ -5,12 +5,21 @@ module Fog
       autoload :Real, File.expand_path("../monitoring/real", __FILE__)
 
       requires :google_project
-      recognizes :google_client_email, :google_key_location, :google_key_string, :google_client,
-                 :app_name, :app_version, :google_json_key_location, :google_json_key_string
+      recognizes(
+        :app_name,
+        :app_version,
+        :google_client,
+        :google_client_email,
+        :google_client_options,
+        :google_key_location,
+        :google_key_string,
+        :google_json_key_location,
+        :google_json_key_string
+      )
 
-      GOOGLE_MONITORING_API_VERSION    = "v2beta2".freeze
-      GOOGLE_MONITORING_BASE_URL       = "https://www.googleapis.com/cloudmonitoring/"
-      GOOGLE_MONITORING_API_SCOPE_URLS = %w(https://www.googleapis.com/auth/monitoring)
+      GOOGLE_MONITORING_API_VERSION    = "v3".freeze
+      GOOGLE_MONITORING_BASE_URL       = "https://monitoring.googleapis.com/".freeze
+      GOOGLE_MONITORING_API_SCOPE_URLS = %w(https://www.googleapis.com/auth/monitoring).freeze
 
       ##
       # MODELS
@@ -20,13 +29,13 @@ module Fog
       model :timeseries
       collection :timeseries_collection
 
-      # TimeseriesDescriptors
-      model :timeseries_descriptor
-      collection :timeseries_descriptors
-
       # MetricDescriptors
       model :metric_descriptor
       collection :metric_descriptors
+
+      # MonitoredResourceDescriptors
+      model :monitored_resource_descriptor
+      collection :monitored_resource_descriptors
 
       ##
       # REQUESTS
@@ -34,12 +43,17 @@ module Fog
 
       # Timeseries
       request :list_timeseries
-
-      # TimeseriesDescriptors
-      request :list_timeseries_descriptors
+      request :create_timeseries
 
       # MetricDescriptors
+      request :get_metric_descriptor
       request :list_metric_descriptors
+      request :create_metric_descriptor
+      request :delete_metric_descriptor
+
+      # MonitoredResourceDescriptors
+      request :list_monitored_resource_descriptors
+      request :get_monitored_resource_descriptor
     end
   end
 end
